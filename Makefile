@@ -1,6 +1,6 @@
 install:
 	pip3 install --upgrade pip &&\
-		pip install -r requirements.txt         
+		pip install -r requirements_container.txt         
 
 lint:
 	pylint --disable=R,C,W1203,W0702 app.py
@@ -8,12 +8,14 @@ lint:
 build:
 	docker build -t flask-docker-python .
 
-run:
-	docker rm -f python-container
+run: stop
 	docker run -d --name python-container -p 3200:3200 flask-docker-python
 
+stop:
+	docker rm -f python-container
+
 test:
-	python3 -m pytest -vv --cov=app test_app.py
+	python3 -m pytest -vv test_app.py
 
 all: install lint build run test
 
